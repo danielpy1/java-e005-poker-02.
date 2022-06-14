@@ -3,7 +3,6 @@ import java.util.HashMap;
 
 public class Maso {
     static Carta carta_alta;
-
     public static void main(String[] args) {
         Carta maso1[]=new Carta[5];
         Carta maso2[]=new Carta[5];
@@ -14,19 +13,27 @@ public class Maso {
             maso2[i]=Carta.generarCarta();
         }
         maso1=ordenar(maso1);
-        maso2=ordenar(maso2);
         String caso1=tiposCasos(maso1);
-        String caso2=tiposCasos(maso2);
-        System.out.print("Mano1: ");
+        System.out.print("Mano-1: ");
         printMaso(maso1);
         System.out.println("\nJugada: "+caso1);
-        System.out.print("Mano2: ");
-        printMaso(maso2);
-        System.out.println("\nJugada: "+caso1);
-        if(caso.equals("CARTA ALTA")){
+        if(caso1.equals("CARTA ALTA")){
             System.out.print("Valor de carta alta: ");
             printMaso(carta_alta);
         }
+        maso2=ordenar(maso2);
+        String caso2=tiposCasos(maso2);
+        System.out.print("\n\nMano-2: ");
+        printMaso(maso2);
+        System.out.println("\nJugada: "+caso2);
+        if(caso1.equals("CARTA ALTA")){
+            System.out.print("Valor de carta alta: ");
+            printMaso(carta_alta);
+        }
+        String jugada_ganadora=evaluadorJugadas(maso1[4],maso2[4],caso1,caso2);
+        System.out.println("\n\n** Jugada Ganadora **");
+        System.out.println(jugada_ganadora);
+
     }
     public static void printMaso(Carta maso[]){
         HashMap<Integer,String> palo=new HashMap<>();
@@ -35,6 +42,7 @@ public class Maso {
         palo.put(2,"C");
         palo.put(3,"H");
         palo.put(4,"D");
+
         valor.put(1,"A");
         valor.put(2,"2");
         valor.put(3,"3");
@@ -59,6 +67,7 @@ public class Maso {
         palo.put(2,"C");
         palo.put(3,"H");
         palo.put(4,"D");
+
         valor.put(1,"A");
         valor.put(2,"2");
         valor.put(3,"3");
@@ -160,20 +169,59 @@ public class Maso {
         }
         return value;
     }
-    public static String evaluadorJugadas(String caso1, String caso2){
-        String Caso_Ganador="";
-        int caso
+    public static String evaluadorJugadas(Carta carta_alta1,Carta carta_alta2, String caso1, String caso2){
+        String casoGanador="";
+        int C1,C2;
+        HashMap<Integer,String> palo=new HashMap<>();
+        HashMap<Integer,String> valor=new HashMap<>();
         HashMap<String ,Integer> ranking=new HashMap<>();
-        ranking.put("ESCALERA DE COLOR",1);
-        ranking.put("POKER",1);
-        ranking.put("FULL",2);
-        ranking.put("COLOR",3);
-        ranking.put("ESCALERA",4);
-        ranking.put("TRIO",5);
-        ranking.put("PAR DOBLE",6);
-        ranking.put("PAR",7);
-        ranking.put("CARTA ALTA",8);
-
-        return Caso_Ganador;
+        ranking.put("ESCALERA DE COLOR",9);
+        ranking.put("POKER",8);
+        ranking.put("FULL",7);
+        ranking.put("COLOR",6);
+        ranking.put("ESCALERA",5);
+        ranking.put("TRIO",4);
+        ranking.put("PAR DOBLE",3);
+        ranking.put("PAR",2);
+        ranking.put("CARTA ALTA",1);
+        palo.put(1,"S");
+        palo.put(2,"C");
+        palo.put(3,"H");
+        palo.put(4,"D");
+        valor.put(1,"A");
+        valor.put(2,"2");
+        valor.put(3,"3");
+        valor.put(4,"4");
+        valor.put(5,"5");
+        valor.put(6,"6");
+        valor.put(7,"7");
+        valor.put(8,"8");
+        valor.put(9,"9");
+        valor.put(10,"T");
+        valor.put(11,"J");
+        valor.put(12,"Q");
+        valor.put(13,"K");
+        C1=ranking.get(caso1);
+        C2=ranking.get(caso2);
+        if(C1==C2){
+            C1=carta_alta1.getValor();
+            C2=carta_alta2.getValor();
+            if(C1==C2){
+                casoGanador="EMPATE, Valor Carta Alta: "+valor.get(carta_alta1.getValor());
+            }else{
+                if(C1>C2){
+                    casoGanador="EMPATE, Ganador por Carta alta: Mano-1 "+valor.get(carta_alta1.getValor())+""+palo.get(carta_alta1.getPalo());
+                }else {
+                    casoGanador="EMPATE, Ganador por Carta alta: Mano-2 "+valor.get(carta_alta2.getValor())+""+palo.get(carta_alta2.getPalo());
+                }
+            }
+        }else{
+            if(C1>C2){
+                casoGanador="Mano-1 "+caso1;
+            }else{
+                casoGanador="Mano-2 "+caso2;
+            }
+        }
+        return casoGanador;
     }
 }
